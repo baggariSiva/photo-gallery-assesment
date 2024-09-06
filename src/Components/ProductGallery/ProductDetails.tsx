@@ -1,28 +1,45 @@
-import { Card, Typography } from "@mui/material";
+import React from "react";
+import { Grid, CircularProgress, Box } from "@mui/material";
 
-import LazyImage from "../LazyImage";
+import ProductItem from "./ProductItem";
 import { Product } from "../../types/Product";
 
-interface ProductItemProps {
-  productInfo: Product;
+interface ProductDetailsProps {
+  products: Product[];
+  isFetching: boolean;
 }
-const ProductItem: React.FC<ProductItemProps> = ({
-  productInfo,
-}: ProductItemProps) => {
+
+const ProductDetails: React.FC<ProductDetailsProps> = ({
+  products,
+  isFetching,
+}: ProductDetailsProps) => {
   return (
-    <Card sx={{height:'100%'}}>
-      <LazyImage
-        key={productInfo.id}
-        src={productInfo.url}
-        alt={productInfo.title}
-      />
-      <Typography
-        variant="h6"
-      >
-        {productInfo?.title}
-      </Typography>
-    </Card>
+    <>
+      {isFetching ? (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+        >
+          {products.map((productInfo: Product) => (
+            <Grid item xs={2} sm={4} md={4} key={productInfo.id}>
+              <ProductItem productInfo={productInfo} key={productInfo.id} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
+    </>
   );
 };
 
-export default ProductItem;
+export default ProductDetails;
